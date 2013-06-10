@@ -105,23 +105,31 @@ var static = function (req, res) {
     }
 
 	if ( readAsText === false && (contentType.indexOf('image') >= 0 || contentType.indexOf('application') >= 0) ) {
-        res.writeHead(200, { 'content-type': contentType });
-        fs.readFile(filename, function (err, data) {
-            if (err) throw err;
-            res.write(data);
-            res.end();
-        });
-    } else {
-		res.writeHead(200, { 'content-type': contentType });
-		if (isAllowedExt) {
-			fs.readFile(filename, 'utf8', function (err, data) {
+		try {
+			res.writeHead(200, { 'content-type': contentType });
+			fs.readFile(filename, function (err, data) {
 				if (err) throw err;
-				res.write(data+"\n");
+				res.write(data);
+				res.end();
 			});
-		} else {
-			res.write("Not supported file type\n");
+		} catch (e) {
+			res.status(404).send('Not found');
 		}
-		res.end();
+    } else {
+		try {
+			res.writeHead(200, { 'content-type': contentType });
+			if (isAllowedExt) {
+				fs.readFile(filename, 'utf8', function (err, data) {
+					if (err) throw err;
+					res.write(data+"\n");
+				});
+			} else {
+				res.write("Not supported file type\n");
+			}
+			res.end();
+		} catch (e) {
+			res.status(404).send('Not found');
+		}
     }
 
 };
