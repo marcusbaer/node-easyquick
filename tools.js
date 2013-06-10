@@ -6,7 +6,7 @@ var data = require('./data');
 var childProcess = require('child_process');
 
 var port = argv.p || '80';
-var wwwDir = argv.www || __dirname;
+var wwwDir = argv.www || process.cwd();
 
 sys.log('Running EASYQUICK server on port ' + port + ' with ' + wwwDir + ' as www path');
 

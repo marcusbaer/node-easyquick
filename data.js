@@ -2,7 +2,7 @@
 var _ = require('underscore');
 var Backbone = require('Backbone');
 var dirty = require('dirty');
-var wwwDir = argv.www || __dirname;
+var wwwDir = argv.www || process.cwd();
 var mydb = dirty(argv.db || wwwDir + '/easyquick.db');
 
 var MyModel = Backbone.Model.extend({
