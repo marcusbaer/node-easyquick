@@ -104,7 +104,7 @@ var static = function (req, res) {
 			break;
     }
 
-	if ( !readAsText && (contentType.indexOf('image') >= 0 || contentType.indexOf('application') >= 0) ) {
+	if ( readAsText === false && (contentType.indexOf('image') >= 0 || contentType.indexOf('application') >= 0) ) {
         res.writeHead(200, { 'content-type': contentType });
         fs.readFile(filename, function (err, data) {
             if (err) throw err;
