@@ -1,6 +1,6 @@
 ﻿{
 	"name": "easyquick",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "A quick and easy web server stub.",
 	"homepage": "http://github.com/marcusbaer/easyquick",
     "keywords": ["server"],
@@ -29,7 +29,7 @@
 		"backbone": ">=1.0.0"
 	},
 	"bin": {
-		"easyquick": "./easyquick"
+		"easyquick": "./bin/easyquick"
 	},
 	"main": "./easyquick.js"
 }

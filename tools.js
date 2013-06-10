@@ -8,6 +8,8 @@ var childProcess = require('child_process');
 var port = argv.p || '80';
 var wwwDir = argv.www || __dirname;
 
+sys.log('Running EASYQUICK server on port ' + port + ' with ' + wwwDir + ' as www path');
+
 var myList = data.myList;
 
 var templates = {};
