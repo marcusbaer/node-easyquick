@@ -104,31 +104,37 @@ var static = function (req, res) {
 			break;
     }
 
+	console.log(filename);
+	
 	if ( readAsText === false && (contentType.indexOf('image') >= 0 || contentType.indexOf('application') >= 0) ) {
-		try {
-			res.writeHead(200, { 'content-type': contentType });
-			fs.readFile(filename, function (err, data) {
-				if (err) throw err;
+		fs.readFile(filename, function (err, data) {
+			if (err) {
+				//throw err;
+				res.writeHead(404);
+				res.end();
+			} else {
+				res.writeHead(200, { 'content-type': contentType });
 				res.write(data);
 				res.end();
-			});
-		} catch (e) {
-			res.status(404).send('Not found');
-		}
-    } else {
-		try {
-			res.writeHead(200, { 'content-type': contentType });
-			if (isAllowedExt) {
-				fs.readFile(filename, 'utf8', function (err, data) {
-					if (err) throw err;
-					res.write(data+"\n");
-				});
-			} else {
-				res.write("Not supported file type\n");
 			}
+		});
+    } else {
+		if (isAllowedExt) {
+			fs.readFile(filename, 'utf8', function (err, data) {
+				if (err) {
+					//throw err;
+					res.writeHead(404);
+					res.end();
+				} else {
+					res.writeHead(200, { 'content-type': contentType });
+					res.write(data+"\n");
+					res.end();
+				}
+			});
+		} else {
+			res.writeHead(200, { 'content-type': 'text/plain' });
+			res.write("Not supported file type\n");
 			res.end();
-		} catch (e) {
-			res.status(404).send('Not found');
 		}
     }
 

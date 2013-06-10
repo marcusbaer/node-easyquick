@@ -1,6 +1,6 @@
 ﻿{
 	"name": "easyquick",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"description": "A quick and easy web server stub.",
 	"homepage": "http://github.com/marcusbaer/easyquick",
     "keywords": ["server"],
