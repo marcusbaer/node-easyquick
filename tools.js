@@ -2,15 +2,24 @@
 var fs = require('fs');
 var sys = require('util');
 var _ = require('underscore');
-var data = require('./data');
 var childProcess = require('child_process');
+var data = null;
+var serviceScript = null;
+
+if (argv.data) {
+	data = require(argv.data);
+	var myList = data.myList;
+}
 
 var port = argv.p || '80';
+var serviceUrl = argv.u || 'service';
 var wwwDir = argv.www || process.cwd();
 
-sys.log('Running EASYQUICK server on port ' + port + ' with ' + wwwDir + ' as www path');
+if (argv.s) {
+	serviceScript = require(wwwDir + '/' + argv.s);
+}
 
-var myList = data.myList;
+sys.log('Running EASYQUICK server on port ' + port + ' (set different by --p=8080) with ' + wwwDir + ' as www path (set different by --www=/tmp/foo' + "\nUse --s=servicedemo to set an existing service method callback script");
 
 var templates = {};
 
@@ -20,15 +29,17 @@ var templates = {};
 
 var callService = function (serviceName, postData, callback) {
     var responseData = {};
-    switch (serviceName) {
-    }
+	if (serviceScript) {
+		responseData = serviceScript(serviceName, postData);
+	}
     if (callback) {
         callback(responseData);
     }
 };
 
 var service = function (req, res, postData) {
-    callService(req.url.replace(/\/service\//,''), JSON.parse(postData), function(responseData){
+	var url = new RegExp('\/'+serviceUrl+'\/');
+    callService(req.url.replace(url,''), JSON.parse(postData), function(responseData){
         res.writeHead(200, { 'content-type': 'application/json' });
         res.write(JSON.stringify(responseData));
         res.end();
@@ -44,8 +55,13 @@ var static = function (req, res) {
     var ext = u.pop();
 
     var contentType = 'text/plain';
+	var isAllowedExt = true;
+	var readAsText = false;
 
     switch (ext) {
+        case "txt":
+            contentType = 'text/plain';
+            break;
         case "html":
         case "htm":
             contentType = 'text/html';
@@ -57,6 +73,10 @@ var static = function (req, res) {
         case "js":
             contentType = 'text/javascript';
             break;
+		case "json":
+			readAsText = true;
+			contentType = 'application/json';
+			break;
         case "tsv":
         case "csv":
             contentType = 'text/comma-separated-values';
@@ -70,15 +90,21 @@ var static = function (req, res) {
         case "jpg":
             contentType = 'image/jpeg';
             break;
+		case "xml":
+			contentType = 'text/xml';
+			break;
 		case "pdf":
 			contentType = 'application/pdf';
 			break;
 		case "swf":
 			contentType = 'application/x-shockwave-flash';
 			break;
+		default:
+			isAllowedExt = false;
+			break;
     }
 
-    if ( contentType.indexOf('image') >= 0 || contentType.indexOf('application') >= 0 ) {
+	if ( !readAsText && (contentType.indexOf('image') >= 0 || contentType.indexOf('application') >= 0) ) {
         res.writeHead(200, { 'content-type': contentType });
         fs.readFile(filename, function (err, data) {
             if (err) throw err;
@@ -86,12 +112,16 @@ var static = function (req, res) {
             res.end();
         });
     } else {
-        res.writeHead(200, { 'content-type': contentType });
-        fs.readFile(filename, 'utf8', function (err, data) {
-            if (err) throw err;
-            res.write(data+"\n");
-            res.end();
-        });
+		res.writeHead(200, { 'content-type': contentType });
+		if (isAllowedExt) {
+			fs.readFile(filename, 'utf8', function (err, data) {
+				if (err) throw err;
+				res.write(data+"\n");
+			});
+		} else {
+			res.write("Not supported file type\n");
+		}
+		res.end();
     }
 
 };

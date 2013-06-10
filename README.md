@@ -6,7 +6,7 @@ A quick and easy web server stub.
 Installation
 ------------------
 
-	npm install -g easyquick
+	npm install easyquick -g
 	
 Run
 ------------------
@@ -19,10 +19,13 @@ Starting parameters
 
 	p - a port different from 80
 	www - a static assets path different from current directory
-	db - a database file different from easyquick.db in current directory
+	s - set a service method script, e.g. --s=servicedemo
+	u - a service url prefix different from 'service' (http://localhost/service/demo)
+
+To get an example for services copy servicedemo.js to your runtime working directory.
 
 Coming up
 ------------------
 
-- (better) integration of database file
+- integration of data handling
 - supporting templates
