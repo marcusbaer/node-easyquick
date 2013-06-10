@@ -9,4 +9,4 @@
 	return responseData;
 };
 
-exports = serviceCallback;
+exports.service = serviceCallback;

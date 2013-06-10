@@ -16,7 +16,7 @@ var serviceUrl = argv.u || 'service';
 var wwwDir = argv.www || process.cwd();
 
 if (argv.s) {
-	serviceScript = require(wwwDir + '/' + argv.s);
+	serviceScript = require(wwwDir + '/' + argv.s).service;
 }
 
 sys.log('Running EASYQUICK server on port ' + port + ' (set different by --p=8080) with ' + wwwDir + ' as www path (set different by --www=/tmp/foo' + "\nUse --s=servicedemo to set an existing service method callback script");
@@ -104,8 +104,6 @@ var static = function (req, res) {
 			break;
     }
 
-	console.log(filename);
-	
 	if ( readAsText === false && (contentType.indexOf('image') >= 0 || contentType.indexOf('application') >= 0) ) {
 		fs.readFile(filename, function (err, data) {
 			if (err) {
@@ -159,7 +157,7 @@ function decode (txt) {
 }
 
 function ls (options, callback) {
-    var compiler = childProcess.exec('ls', function (error, stdout, stderr) {
+    var proc = childProcess.exec('ls', function (error, stdout, stderr) {
         if (error) {
             console.log(error.stack);
             console.log('Error code: '+error.code);
@@ -169,7 +167,7 @@ function ls (options, callback) {
 //		console.log('Child Process STDERR: '+stderr);
     });
 
-    compiler.on('exit', function (code) {
+    proc.on('exit', function (code) {
 //		sys.log('Child process exited with exit code '+code);
         if (callback) {
             callback();

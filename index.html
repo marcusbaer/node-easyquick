@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<meta charset="utf-8">
+<header>
+    <title>Easyquick Demo</title>
+</header>
+<body>
+	<h1>Hello</h1>
+	<p>This is a demo page. Open your console to see more output!</p>
+</body>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script language="javascript">
+
+$(document).ready(function() {
+
+    callService('demo', {}, function(response){
+		console.log(response);
+    });
+
+});
+
+var callService = function (serviceName, serviceData, successCallback) {
+    var type = 'GET';
+    var data = {};
+    if (serviceData && typeof serviceData === 'object') {
+        type = 'POST';
+        data = serviceData;
+    } else {
+        successCallback = serviceData;
+    }
+    $.ajax({
+        type: type,
+        url: "service/" + serviceName,
+        data: JSON.stringify(data),
+        context: document.body
+    }).done(function(response) {
+        if (successCallback) {
+            successCallback(response);
+        }
+    });
+};
+
+</script>
