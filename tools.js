@@ -47,6 +47,7 @@ var static = function (req, res) {
 
     switch (ext) {
         case "html":
+        case "htm":
             contentType = 'text/html';
             break;
         case "css":
@@ -69,9 +70,15 @@ var static = function (req, res) {
         case "jpg":
             contentType = 'image/jpeg';
             break;
+		case "pdf":
+			contentType = 'application/pdf';
+			break;
+		case "swf":
+			contentType = 'application/x-shockwave-flash';
+			break;
     }
 
-    if ( contentType.indexOf('image') >= 0 ) {
+    if ( contentType.indexOf('image') >= 0 || contentType.indexOf('application') >= 0 ) {
         res.writeHead(200, { 'content-type': contentType });
         fs.readFile(filename, function (err, data) {
             if (err) throw err;
