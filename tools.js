@@ -19,7 +19,7 @@ if (argv.s) {
 	serviceScript = require(wwwDir + '/' + argv.s).service;
 }
 
-sys.log('Running EASYQUICK server on port ' + port + ' (set different by --p=8080) with ' + wwwDir + ' as www path (set different by --www=/tmp/foo' + "\nUse --s=servicedemo to set an existing service method callback script");
+sys.log('Running EASYQUICK server on port ' + port + ' with ' + wwwDir + ' as working directory');
 
 var templates = {};
 
