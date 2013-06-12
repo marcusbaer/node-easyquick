@@ -1,6 +1,6 @@
 ﻿{
 	"name": "easyquick",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "A quick and easy web server stub.",
 	"homepage": "http://github.com/marcusbaer/easyquick",
     "keywords": ["server"],
@@ -23,10 +23,7 @@
 		"npm": ">=1.2.14"
 	},
 	"dependencies": {
-		"optimist": "~0.3.5",
-		"dirty": "~0.9.7",
-		"underscore": ">=1.4.4",
-		"backbone": ">=1.0.0"
+		"optimist": "~0.3.5"
 	},
 	"bin": {
 		"easyquick": "./bin/easyquick"
