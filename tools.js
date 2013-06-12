@@ -1,15 +1,8 @@
 ﻿var argv = require('optimist').argv;
 var fs = require('fs');
 var sys = require('util');
-var _ = require('underscore');
-var childProcess = require('child_process');
-var data = null;
 var serviceScript = null;
-
-if (argv.data) {
-	data = require(argv.data);
-	var myList = data.myList;
-}
+//var childProcess = require('child_process');
 
 var port = argv.p || '80';
 var serviceUrl = argv.u || 'service';
@@ -20,12 +13,6 @@ if (argv.s) {
 }
 
 sys.log('Running EASYQUICK server on port ' + port + ' with ' + wwwDir + ' as working directory');
-
-var templates = {};
-
-//loadTemplate('./tpl/one.scss', function(tpl){
-//    templates.one = tpl;
-//});
 
 var callService = function (serviceName, postData, callback) {
     var responseData = {};
@@ -90,6 +77,9 @@ var static = function (req, res) {
         case "jpg":
             contentType = 'image/jpeg';
             break;
+        case "gif":
+            contentType = 'image/gif';
+            break;
 		case "xml":
 			contentType = 'text/xml';
 			break;
@@ -99,6 +89,10 @@ var static = function (req, res) {
 		case "swf":
 			contentType = 'application/x-shockwave-flash';
 			break;
+        case "svg":
+            readAsText = true;
+            contentType = 'image/svg+xml';
+            break;
 		default:
 			isAllowedExt = false;
 			break;
@@ -141,13 +135,6 @@ var static = function (req, res) {
 exports.static = static;
 exports.service = service;
 
-function loadTemplate (filename, callback) {
-    fs.readFile(filename, 'utf8', function(err, data) {
-        if(err) throw err;
-        callback(data);
-    });
-}
-
 function encode (txt) {
     return new Buffer(txt).toString('base64');
 }
@@ -156,21 +143,28 @@ function decode (txt) {
     return new Buffer(txt, 'base64').toString('utf8');
 }
 
-function ls (options, callback) {
-    var proc = childProcess.exec('ls', function (error, stdout, stderr) {
-        if (error) {
-            console.log(error.stack);
-            console.log('Error code: '+error.code);
-            console.log('Signal received: '+error.signal);
-        }
-//		console.log('Child Process STDOUT: '+stdout);
-//		console.log('Child Process STDERR: '+stderr);
-    });
+//function loadTemplate (filename, callback) {
+//    fs.readFile(filename, 'utf8', function(err, data) {
+//        if(err) throw err;
+//        callback(data);
+//    });
+//}
 
-    proc.on('exit', function (code) {
-//		sys.log('Child process exited with exit code '+code);
-        if (callback) {
-            callback();
-        }
-    });
-}
+//function ls (options, callback) {
+//    var proc = childProcess.exec('ls', function (error, stdout, stderr) {
+//        if (error) {
+//            console.log(error.stack);
+//            console.log('Error code: '+error.code);
+//            console.log('Signal received: '+error.signal);
+//        }
+////		console.log('Child Process STDOUT: '+stdout);
+////		console.log('Child Process STDERR: '+stderr);
+//    });
+//
+//    proc.on('exit', function (code) {
+////		sys.log('Child process exited with exit code '+code);
+//        if (callback) {
+//            callback();
+//        }
+//    });
+//}
