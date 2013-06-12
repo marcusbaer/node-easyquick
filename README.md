@@ -23,6 +23,8 @@ Starting parameters overview
 	s		set a service method script
 	u		a service url prefix different from 'service' (http://localhost/service/demo)
 
+	ws		use WebSockets
+
 	ssl		start with ssl support (on port 443)
 	h		a host name different from localhost (for ssl)
 
@@ -58,9 +60,26 @@ To call services from frontend you can copy `jquery.service.js` to your working 
 
 Or do something else.
 
+WebSockets
+------------------
+
+To use WebSockets, install `socket.io` first (`npm install socket.io -g`). After that start easyquick server with `--ws` flag.
+
+	easyquick --ws
+
+Calling services from frontend is shown in example as well.
+
+	$(document).ready(function() {
+    	$(document).initSocket(function(){
+	        $(document).callSocket('hello', {id: '123'}, function (response) {
+            	// something inside the socket callback..
+        	});
+    	});
+	});
+
 SSL support
 ------------------
 
-To run easyquick server with ssl, install http-proxy first (`npm install http-proxy -g`) and start with `--ssl` parameter. Optionally set another host name with `--h`. SSL needs a (self-signed) ssl certificate. It has to be placed inside a folder named `ssl` in your working directory. Place here both files `localhost.key` and `localhost.cert`. Actually SSL is only supported on port 443.
+To run easyquick server with ssl, install `http-proxy` first (`npm install http-proxy -g`) and start with `--ssl` parameter. Optionally set another host name with `--h`. SSL needs a (self-signed) ssl certificate. It has to be placed inside a folder named `ssl` in your working directory. Place here both files `localhost.key` and `localhost.cert`. Actually SSL is only supported on port 443.
 
 	easyquick --ssl --h "abc.de"

@@ -1,9 +1,12 @@
 ﻿(function($){
 
-    $.fn.callService = function (serviceName, serviceData, successCallback) {
+    esock = io.connect( document.location.origin );
+
+    $.fn.callService = function (serviceName, serviceData, successCallback, options) {
         var callService = function (serviceName, serviceData, successCallback) {
             var type = 'GET';
             var data = {};
+            var serviceUrl = (options && options.url) ? options.url : 'service';
             if (serviceData && typeof serviceData === 'object') {
                 type = 'POST';
                 data = serviceData;
@@ -12,7 +15,7 @@
             }
             $.ajax({
                 type: type,
-                url: "service/" + serviceName,
+                url: serviceUrl + '/' + serviceName,
                 data: JSON.stringify(data),
                 context: document.body
             }).done(function(response) {
@@ -23,6 +26,19 @@
         };
         callService(serviceName, serviceData, successCallback);
         return this;
+    };
+
+    $.fn.initSocket = function (callback) {
+        esock.on('connect', function () {
+            callback();
+        });
+    };
+
+    $.fn.callSocket = function (serviceName, serviceData, successCallback) {
+        esock.emit(serviceName, serviceData);
+        esock.on(serviceName, function (data) {
+            successCallback(data);
+        });
     };
 
 })(jQuery);
